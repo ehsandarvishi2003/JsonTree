@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-
-    public class Rootobject
-    {
-        public string odatacontext { get; set; }
-        public Value[] value { get; set; }
-    }
-
+    
     public class Value
     {
         public string odataetag { get; set; }
@@ -35,4 +30,29 @@ namespace ConsoleApp1
         public object overriddencreatedon { get; set; }
     }
 
+    internal class Algorithm
+    {
+        public Value[] value { get; set; }
+        public void PrintTree()
+        {
+            if (value != null)
+            {
+                PrintTreeRecursive(null, 0);
+            }
+        }
+
+        private void PrintTreeRecursive(string parentId, int level)
+        {
+            foreach (var item in value)
+            {
+                if (item._parentsubject_value == parentId)
+                {
+                    Console.WriteLine(new string('-', level * 4) + "subjectId: " + item.subjectid);
+                    Console.WriteLine(new string('-', level * 4) + "title: " + item.title);
+
+                    PrintTreeRecursive(item.subjectid, level + 1);
+                }
+            }
+        }
+    }
 }

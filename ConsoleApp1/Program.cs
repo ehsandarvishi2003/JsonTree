@@ -1,4 +1,8 @@
-﻿using ConsoleApp1;   
+﻿using ConsoleApp1;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Reflection.Emit;
+
 namespace ConsoleApp1
 {
     internal class Program
@@ -630,120 +634,17 @@ namespace ConsoleApp1
         }
     ]
 }";
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(jsoncontent);
-
-            object value = obj.value[0].subjectid;
-
-            //اون قسمت اولشو بنویس اینجا
-            try
-            {
-                foreach (var item in obj.value)
-                {
-                    Console.WriteLine("subjectId : " + item.subjectid);
-                    Console.WriteLine("title : " + item.title);
-
-                    foreach (var childItem in obj.value)
-                    {
-                        if (item.subjectid != null && item.subjectid == childItem._parentsubject_value)
-                        {
-                            Console.WriteLine("children : ");
-                            Console.WriteLine("----------------subjectId : " + childItem.subjectid);
-                            Console.WriteLine("----------------title : " + childItem.title);
-
-                            foreach (var grandChildItem in obj.value)
-                            {
-                                if (childItem.subjectid != null && childItem.subjectid == grandChildItem._parentsubject_value)
-                                {
-                                    Console.WriteLine("----------------children : ");
-                                    Console.WriteLine("--------------------------------subjectId : " + grandChildItem.subjectid);
-                                    Console.WriteLine("--------------------------------title : " + grandChildItem.title);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("***********************************************************************************");
-                Console.WriteLine(e.Message + "--------Exception");
-                Console.WriteLine("***********************************************************************************");
-            }
-
-            /*
-
-            // فرض کنید obj.value یک لیست از اشیاء مربوطه باشد
-            List<Rootobject> objValueList = new List<Rootobject>();
-
-            // Populate obj.value با داده‌های مورد نیاز
+            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Algorithm>(jsoncontent);
 
             try
             {
-                List<object> outputData = new List<object>();
-
-                foreach (var item in objValueList)
-                {
-                    Dictionary<string, object> data = new Dictionary<string, object>
-                {
-                    { "subjectId", item.subjectid },
-                    { "title", item.title }
-                };
-
-                    List<object> children = new List<object>();
-
-                    foreach (var childItem in objValueList)
-                    {
-                        if (item.subjectid != null && item.subjectid == childItem._parentsubject_value)
-                        {
-                            Dictionary<string, object> childData = new Dictionary<string, object>
-                        {
-                            { "subjectId", childItem.subjectid },
-                            { "title", childItem.title }
-                        };
-
-                            List<object> grandChildren = new List<object>();
-
-                            foreach (var grandChildItem in objValueList)
-                            {
-                                if (childItem.subjectid != null && childItem.subjectid == grandChildItem._parentsubject_value)
-                                {
-                                    Dictionary<string, object> grandChildData = new Dictionary<string, object>
-                                {
-                                    { "subjectId", grandChildItem.subjectid },
-                                    { "title", grandChildItem.title }
-                                };
-                                    grandChildren.Add(grandChildData);
-                                }
-                            }
-
-                            if (grandChildren.Count > 0)
-                            {
-                                childData.Add("children", grandChildren);
-                            }
-
-                            children.Add(childData);
-                        }
-                    }
-
-                    if (children.Count > 0)
-                    {
-                        data.Add("children", children);
-                    }
-
-                    outputData.Add(data);
-                }
-
-                string jsonOutput = JsonConvert.SerializeObject(outputData, Formatting.Indented);
-
-                // نوشتن خروجی به فایل
-                File.WriteAllText("output.json", jsonOutput);
-
-                Console.WriteLine("فایل JSON با موفقیت ایجاد شد.");
+                Algorithm rootObject = JsonConvert.DeserializeObject<Algorithm>(jsoncontent);
+                rootObject.PrintTree();
             }
             catch (Exception e)
             {
-                Console.WriteLine("خطا در تولید فایل JSON: " + e.Message);
-            }*/
-        }
+                Console.WriteLine("Error: " + e.Message);
+            }
+        }    
     }
 }
